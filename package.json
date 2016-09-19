@@ -1,0 +1,29 @@
+{
+  "name": "vw-unofficial",
+  "version": "0.1.0",
+  "author": "Brandon Brown",
+  "dependencies": {
+    "pebble-clay": "^1.0.2"
+  },
+  "keywords": [],
+  "pebble": {
+    "displayName": "VW (unofficial)",
+    "projectType": "rocky",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "uuid": "1bf4d790-d21d-4ae1-b553-5aba1699ade0",
+    "messageKeys": [],
+    "capabilities": [
+      "configurable"
+    ],
+    "resources": {
+      "media": []
+    },
+    "targetPlatforms": [
+      "basalt"
+    ],
+    "watchapp": {
+      "watchface": true
+    }
+  }
+}

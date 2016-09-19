@@ -1,1 +1,1 @@
-# pebble-watchface-gti
+# pebble-watchface-vw-unofficial
