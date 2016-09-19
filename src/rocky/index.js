@@ -16,13 +16,13 @@ var monthNames = [
 ]
 
 // Colours
-var logoColor = '#fff'
+var logoColor = '#ff0055'
 var brandSecondary = '#fff'
 
 var brandFontPrimary = '18px bold Gothic'
 var brandFontSecondary = '32px bold numbers Leco-numbers'
 
-var settings = null
+// var settings = null
 
 rocky.on('draw', function (event) {
   var ctx = event.context
@@ -36,9 +36,9 @@ rocky.on('draw', function (event) {
   }
   var d = new Date()
 
-  if (settings) {
-    logoColor = cssColor(settings.LogoColor)
-  }
+  // if (settings) {
+  //   logoColor = cssColor(settings.LogoColor)
+  // }
 
   // Reset the view
   ctx.clearRect(0, 0, w, h)
