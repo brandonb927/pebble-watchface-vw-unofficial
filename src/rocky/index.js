@@ -102,6 +102,7 @@ rocky.on('minutechange', function (event) {
 
 rocky.on('message', function(event) {
   settings = event.data;
+  rocky.requestDraw()
 })
 
 rocky.postMessage({
