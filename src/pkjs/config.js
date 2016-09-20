@@ -12,7 +12,7 @@ module.exports = [
       },
       {
         "type": "color",
-        "messageKey": "LogoColor",
+        "appKey": "logoColor",
         "defaultValue": "0x000000",
         "label": "Color"
       }

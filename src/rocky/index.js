@@ -22,7 +22,7 @@ var brandSecondary = '#fff'
 var brandFontPrimary = '18px bold Gothic'
 var brandFontSecondary = '32px bold numbers Leco-numbers'
 
-// var settings = null
+var settings = null
 
 rocky.on('draw', function (event) {
   var ctx = event.context
@@ -36,9 +36,9 @@ rocky.on('draw', function (event) {
   }
   var d = new Date()
 
-  // if (settings) {
-  //   logoColor = cssColor(settings.LogoColor)
-  // }
+  if (settings) {
+    logoColor = cssColor(settings.logoColor)
+  }
 
   // Reset the view
   ctx.clearRect(0, 0, w, h)
@@ -98,6 +98,14 @@ rocky.on('draw', function (event) {
 rocky.on('minutechange', function (event) {
   // Request the screen to be redrawn on next pass
   rocky.requestDraw()
+})
+
+rocky.on('message', function(event) {
+  settings = event.data;
+})
+
+rocky.postMessage({
+  command: 'settings'
 })
 
 // Borrowed from Clay.js

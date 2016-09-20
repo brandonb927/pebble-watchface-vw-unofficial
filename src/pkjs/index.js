@@ -1,4 +1,4 @@
-var Clay = require('pebble-clay')
+var Clay = require('./clay')
 var clayConfig = require('./config')
 var clay = new Clay(clayConfig, null, { autoHandleEvents: false })
 
@@ -6,7 +6,7 @@ Pebble.addEventListener('showConfiguration', function (e) {
   Pebble.openURL(clay.generateUrl())
 })
 
-Pebble.addEventListener('webviewclosed', function(e) {
+Pebble.addEventListener('webviewclosed', function (e) {
   if (e && !e.response) {
     return
   }
@@ -16,7 +16,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
   // Flatten to match localStorage version
   var settingsFlat = {}
-  Object.keys(settings).forEach(function(key) {
+  Object.keys(settings).forEach(function (key) {
     if (typeof settings[key] === 'object' && settings[key]) {
       settingsFlat[key] = settings[key].value
     } else {
@@ -27,7 +27,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   Pebble.postMessage(settingsFlat)
 })
 
-Pebble.on('message', function(event) {
+Pebble.on('message', function (event) {
   if (event.data.command === 'settings') {
     restoreSettings()
   }

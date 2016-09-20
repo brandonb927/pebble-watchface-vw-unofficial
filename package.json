@@ -5,9 +5,7 @@
   "description": "An unofficial VW logo watchface",
   "repository": "https://github.com/brandonb927/pebble-watchface-vw-unofficial",
   "license": "MIT",
-  "dependencies": {
-    
-  },
+  "dependencies": {},
   "keywords": [],
   "pebble": {
     "displayName": "VW (unofficial)",
