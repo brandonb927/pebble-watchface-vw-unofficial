@@ -1,47 +1,33 @@
 var rocky = require('rocky')
 
-var monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-]
-
-// Colours
-var logoColor = '#ff0055'
-var brandSecondary = '#fff'
-
-var brandFontPrimary = '18px bold Gothic'
-var brandFontSecondary = '32px bold numbers Leco-numbers'
+var config = require('./config')
 
 var settings = null
 
-rocky.on('draw', function (event) {
-  var ctx = event.context
+function canvasBox (ctx) {
   var w = ctx.canvas.unobstructedWidth // 144
   var h = ctx.canvas.unobstructedHeight // 168
-  var centerY = (h / 2)
-  var centerX = (w / 2)
-  var uoHeight = function (posX) {
-    var obstruction_h = (h - w - 3)
-    return (posX - obstruction_h)
-  }
-  var d = new Date()
 
-  if (settings) {
-    logoColor = cssColor(settings.logoColor)
+  return {
+    w: w,
+    h: h,
+    centerY: (h / 2),
+    centerX: (w / 2),
   }
+}
 
-  // Reset the view
-  ctx.clearRect(0, 0, w, h)
+function uoHeight (ctx, posX) {
+  var w = canvasBox(ctx).w
+  var h = canvasBox(ctx).h
+  var obstruction_h = (h - w - 3)
+  return (posX - obstruction_h)
+}
+
+function drawLogo (ctx, logoColor) {
+  var w = canvasBox(ctx).w
+  var h = canvasBox(ctx).h
+  var centerY = canvasBox(ctx).centerY
+  var centerX = canvasBox(ctx).centerX
 
   // LOGO body
   ctx.strokeStyle = logoColor
@@ -71,28 +57,54 @@ rocky.on('draw', function (event) {
   ctx.stroke()
   ctx.closePath()
 
+  // The outer circle
   ctx.strokeStyle = logoColor
   ctx.lineWidth = 8
   ctx.beginPath()
   ctx.arc(centerX, (centerY - 22), 50, 0, (2 * Math.PI), false)
   ctx.stroke()
   ctx.closePath()
+}
 
-  // DATE
-  var clockDate = monthNames[d.getMonth()] + ' ' + d.getDate()
-  ctx.textAlign = 'center'
-  ctx.font = brandFontPrimary
-  ctx.fillStyle = brandSecondary
-  ctx.fillText(clockDate, centerX, (uoHeight(h) - 30))
+function drawTime (ctx) {
+  var w = canvasBox(ctx).w
+  var h = canvasBox(ctx).h
+  var centerY = canvasBox(ctx).centerY
+  var centerX = canvasBox(ctx).centerX
 
-
-  // TIME
-  var localeTime = d.toLocaleTimeString().split(' ') // ['12:31:21', 'AM'] or ['00:31:21']
+  var localeTime = config.date.now.toLocaleTimeString().split(' ') // ['12:31:21', 'AM'] or ['00:31:21']
   var clockTime = localeTime[0].split(':').slice(0, 2).join(':') // '12:31' or '00:31'
+
   ctx.textAlign = 'center'
-  ctx.fillStyle = brandSecondary
-  ctx.font = brandFontSecondary
-  ctx.fillText(clockTime, centerX, (uoHeight(h) - 16))
+  ctx.fillStyle = config.brand.colorSecondary
+  ctx.font = config.brand.fontSecondary
+  ctx.fillText(clockTime, centerX, (uoHeight(ctx, h) - 16))
+}
+
+function drawDate (ctx) {
+  var w = canvasBox(ctx).w
+  var h = canvasBox(ctx).h
+  var centerY = canvasBox(ctx).centerY
+  var centerX = canvasBox(ctx).centerX
+
+  var clockDate = config.date.monthNames[config.date.now.getMonth()] + ' ' + config.date.now.getDate()
+
+  ctx.textAlign = 'center'
+  ctx.font = config.brand.fontPrimary
+  ctx.fillStyle = config.brand.colorSecondary
+  ctx.fillText(clockDate, centerX, (uoHeight(ctx, h) - 30))
+}
+
+rocky.on('draw', function (event) {
+  var ctx = event.context
+  var logoColor = settings ? cssColor(settings.logoColor) : config.brand.logoColor
+
+  // Reset the view
+  ctx.clearRect(0, 0, canvasBox(ctx).w, canvasBox(ctx).h)
+
+  drawLogo(ctx, logoColor)
+  drawDate(ctx)
+  drawTime(ctx)
 })
 
 rocky.on('minutechange', function (event) {
