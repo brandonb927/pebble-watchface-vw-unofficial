@@ -6,6 +6,3 @@ build/
 
 # Ignore installed node modules
 node_modules/
-
-# Local pebble emulator
-pemulator.html
