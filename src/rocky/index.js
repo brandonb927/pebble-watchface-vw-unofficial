@@ -1,8 +1,52 @@
 var rocky = require('rocky')
 
-var config = require('./config')
-
 var settings = null
+
+var config = {
+  // Branding
+  brand: {
+    // Branding - Colours
+    logoColor: '#ff0055',
+    colorSecondary: '#fff',
+
+    // Branding - Colours
+    fontPrimary: '18px bold Gothic',
+    fontSecondary: '32px bold numbers Leco-numbers',
+  },
+}
+
+// Borrowed from Clay.js
+
+/**
+ * @param {string|boolean|number} color
+ * @returns {string}
+ */
+function cssColor (color) {
+  if (typeof color === 'number') {
+    color = color.toString(16)
+  } else if (!color) {
+    return 'transparent'
+  }
+
+  color = padColorString(color)
+
+  return '#' + color
+}
+
+/**
+ * @param {string} color
+ * @return {string}
+ */
+function padColorString (color) {
+  color = color.toLowerCase()
+
+  while (color.length < 6) {
+    color = '0' + color
+  }
+
+  return color
+}
+
 
 function canvasBox (ctx) {
   var w = ctx.canvas.unobstructedWidth // 144
@@ -66,13 +110,13 @@ function drawLogo (ctx, logoColor) {
   ctx.closePath()
 }
 
-function drawTime (ctx) {
+function drawTime (ctx, date) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var centerY = canvasBox(ctx).centerY
   var centerX = canvasBox(ctx).centerX
 
-  var localeTime = config.date.now.toLocaleTimeString().split(' ') // ['12:31:21', 'AM'] or ['00:31:21']
+  var localeTime = date.toLocaleTimeString().split(' ') // ['12:31:21', 'AM'] or ['00:31:21']
   var clockTime = localeTime[0].split(':').slice(0, 2).join(':') // '12:31' or '00:31'
 
   ctx.textAlign = 'center'
@@ -81,13 +125,13 @@ function drawTime (ctx) {
   ctx.fillText(clockTime, centerX, (uoHeight(ctx, h) - 16))
 }
 
-function drawDate (ctx) {
+function drawDate (ctx, date) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var centerY = canvasBox(ctx).centerY
   var centerX = canvasBox(ctx).centerX
 
-  var clockDate = config.date.monthNames[config.date.now.getMonth()] + ' ' + config.date.now.getDate()
+  var clockDate = date.toLocaleDateString(undefined, { month: 'short' }) + ' ' + date.getDate()
 
   ctx.textAlign = 'center'
   ctx.font = config.brand.fontPrimary
@@ -97,14 +141,17 @@ function drawDate (ctx) {
 
 rocky.on('draw', function (event) {
   var ctx = event.context
-  var logoColor = settings ? cssColor(settings.logoColor) : config.brand.logoColor
+  var date = new Date()
+
+  // var logoColor = settings ? cssColor(settings.logoColor) : config.brand.logoColor
+  var logoColor = config.brand.logoColor
 
   // Reset the view
   ctx.clearRect(0, 0, canvasBox(ctx).w, canvasBox(ctx).h)
 
   drawLogo(ctx, logoColor)
-  drawDate(ctx)
-  drawTime(ctx)
+  drawDate(ctx, date)
+  drawTime(ctx, date)
 })
 
 rocky.on('minutechange', function (event) {
@@ -120,35 +167,3 @@ rocky.on('message', function(event) {
 rocky.postMessage({
   command: 'settings'
 })
-
-// Borrowed from Clay.js
-
-/**
- * @param {string|boolean|number} color
- * @returns {string}
- */
-function cssColor(color) {
-  if (typeof color === 'number') {
-    color = color.toString(16)
-  } else if (!color) {
-    return 'transparent'
-  }
-
-  color = padColorString(color)
-
-  return '#' + color
-}
-
-/**
- * @param {string} color
- * @return {string}
- */
-function padColorString(color) {
-  color = color.toLowerCase()
-
-  while (color.length < 6) {
-    color = '0' + color
-  }
-
-  return color
-}
