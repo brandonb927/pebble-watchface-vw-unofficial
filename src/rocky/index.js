@@ -1,7 +1,5 @@
 var rocky = require('rocky')
 
-var settings = null
-
 var config = {
   // Branding
   brand: {
@@ -15,40 +13,7 @@ var config = {
   },
 }
 
-// Borrowed from Clay.js
-
-/**
- * @param {string|boolean|number} color
- * @returns {string}
- */
-function cssColor (color) {
-  if (typeof color === 'number') {
-    color = color.toString(16)
-  } else if (!color) {
-    return 'transparent'
-  }
-
-  color = padColorString(color)
-
-  return '#' + color
-}
-
-/**
- * @param {string} color
- * @return {string}
- */
-function padColorString (color) {
-  color = color.toLowerCase()
-
-  while (color.length < 6) {
-    color = '0' + color
-  }
-
-  return color
-}
-
-
-function canvasBox (ctx) {
+var canvasBox = function (ctx) {
   var w = ctx.canvas.unobstructedWidth // 144
   var h = ctx.canvas.unobstructedHeight // 168
 
@@ -60,14 +25,14 @@ function canvasBox (ctx) {
   }
 }
 
-function uoHeight (ctx, posX) {
+var uoHeight = function (ctx, posX) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var obstruction_h = (h - w - 3)
   return (posX - obstruction_h)
 }
 
-function drawLogo (ctx, logoColor) {
+var drawLogo = function (ctx, logoColor) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var centerY = canvasBox(ctx).centerY
@@ -110,7 +75,7 @@ function drawLogo (ctx, logoColor) {
   ctx.closePath()
 }
 
-function drawTime (ctx, date) {
+var drawTime = function (ctx, date) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var centerY = canvasBox(ctx).centerY
@@ -125,7 +90,7 @@ function drawTime (ctx, date) {
   ctx.fillText(clockTime, centerX, (uoHeight(ctx, h) - 16))
 }
 
-function drawDate (ctx, date) {
+var drawDate = function (ctx, date) {
   var w = canvasBox(ctx).w
   var h = canvasBox(ctx).h
   var centerY = canvasBox(ctx).centerY
@@ -143,13 +108,10 @@ rocky.on('draw', function (event) {
   var ctx = event.context
   var date = new Date()
 
-  // var logoColor = settings ? cssColor(settings.logoColor) : config.brand.logoColor
-  var logoColor = config.brand.logoColor
-
   // Reset the view
   ctx.clearRect(0, 0, canvasBox(ctx).w, canvasBox(ctx).h)
 
-  drawLogo(ctx, logoColor)
+  drawLogo(ctx, config.brand.logoColor)
   drawDate(ctx, date)
   drawTime(ctx, date)
 })
@@ -157,13 +119,4 @@ rocky.on('draw', function (event) {
 rocky.on('minutechange', function (event) {
   // Request the screen to be redrawn on next pass
   rocky.requestDraw()
-})
-
-rocky.on('message', function(event) {
-  settings = event.data;
-  rocky.requestDraw()
-})
-
-rocky.postMessage({
-  command: 'settings'
 })

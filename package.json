@@ -12,9 +12,7 @@
     "sdkVersion": "3",
     "enableMultiJS": true,
     "uuid": "1bf4d790-d21d-4ae1-b553-5aba1699ade0",
-    "capabilities": [
-      "configurable"
-    ],
+    "capabilities": [],
     "resources": {
       "media": []
     },
