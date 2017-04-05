@@ -1,5 +1,7 @@
 var rocky = require('rocky')
 
+var settings = null
+
 var config = {
   // Branding
   brand: {
@@ -12,6 +14,39 @@ var config = {
     fontSecondary: '32px bold numbers Leco-numbers',
   },
 }
+
+// Borrowed from Clay.js
+
+/**
+ * @param {string|boolean|number} color
+ * @returns {string}
+ */
+var cssColor = function (color) {
+  if (typeof color === 'number') {
+    color = color.toString(16)
+  } else if (!color) {
+    return 'transparent'
+  }
+
+  color = padColorString(color)
+
+  return '#' + color
+}
+
+/**
+ * @param {string} color
+ * @return {string}
+ */
+var padColorString = function (color) {
+  color = color.toLowerCase()
+
+  while (color.length < 6) {
+    color = '0' + color
+  }
+
+  return color
+}
+
 
 var canvasBox = function (ctx) {
   var w = ctx.canvas.unobstructedWidth // 144
@@ -108,10 +143,12 @@ rocky.on('draw', function (event) {
   var ctx = event.context
   var date = new Date()
 
+  var logoColor = settings !== null ? cssColor(settings.logoColor) : config.brand.logoColor
+
   // Reset the view
   ctx.clearRect(0, 0, canvasBox(ctx).w, canvasBox(ctx).h)
 
-  drawLogo(ctx, config.brand.logoColor)
+  drawLogo(ctx, logoColor)
   drawDate(ctx, date)
   drawTime(ctx, date)
 })
@@ -119,4 +156,13 @@ rocky.on('draw', function (event) {
 rocky.on('minutechange', function (event) {
   // Request the screen to be redrawn on next pass
   rocky.requestDraw()
+})
+
+rocky.on('message', function(event) {
+  settings = event.data;
+  rocky.requestDraw()
+})
+
+rocky.postMessage({
+  command: 'settings'
 })

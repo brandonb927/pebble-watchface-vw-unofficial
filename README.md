@@ -5,5 +5,6 @@
 
 A modern RockyJS watchface for the VW enthusiasts such as myself 😁
 
-TODO:
-- Use Clay to configure the colour of the logo
+### Notes
+
+- You can configure the colour of the logo in the watchface settings
