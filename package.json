@@ -1,6 +1,6 @@
 {
   "name": "vw-unofficial",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Brandon Brown",
   "description": "An unofficial VW logo watchface",
   "repository": "https://github.com/brandonb927/pebble-watchface-vw-unofficial",
@@ -12,7 +12,9 @@
     "sdkVersion": "3",
     "enableMultiJS": true,
     "uuid": "1bf4d790-d21d-4ae1-b553-5aba1699ade0",
-    "capabilities": [],
+    "capabilities": [
+      "configurable"
+    ],
     "resources": {
       "media": []
     },
